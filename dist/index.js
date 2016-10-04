@@ -22,19 +22,15 @@ function fileExists(filepath) {
     }
 }
 
-var argv = require('yargs').usage('Usage: $0 <input file> <ouput file> [--prop className] [--prop otherAttribute]').demand(2).help('h').alias('h', 'help').argv;
+var argv = require('yargs').usage('Usage: $0 <input file> <ouput file>').demand(2).help('h').alias('h', 'help').argv;
 
 var _argv$_ = _slicedToArray(argv._, 2);
 
 var inputFilename = _argv$_[0];
 var outputFilename = _argv$_[1];
 
-var props = argv.prop;
-if (props != null && !Array.isArray(props)) {
-    props = [props];
-}
-
 // Ensure input file exists
+
 if (!fileExists(inputFilename)) {
     process.exit(9);
 }
@@ -45,4 +41,4 @@ var inputSource = _fs2.default.readFileSync(inputFilename).toString().replace(/\
 _svgToReact2.default.convertFileSource(inputSource, function (err, output) {
     var componentSource = '/*eslint-disable*/\n' + output;
     _fs2.default.writeFileSync(outputFilename, componentSource);
-}, { customProperties: props });
+});

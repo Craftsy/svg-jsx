@@ -4,9 +4,7 @@ var esprima = require('esprima-fb');
 var recast = require('recast');
 var builders = recast.types.builders;
 
-module.exports = function (svgString, _ref) {
-    var customProperties = _ref.customProperties;
-
+module.exports = function (svgString) {
     var ast = recast.parse(svgString, { parser: esprima }).program;
 
     recast.types.visit(ast, {
@@ -31,7 +29,7 @@ module.exports = function (svgString, _ref) {
             var jsxNodeName = path.value.name.name;
 
             if (jsxNodeName === 'svg') {
-                addCustomProperties(path, customProperties);
+                addCustomProperties(path);
             }
 
             this.traverse(path);
@@ -43,12 +41,10 @@ module.exports = function (svgString, _ref) {
     return recast.print(ast, { parser: esprima }).code;
 };
 
-function addCustomProperties(path, customProperties) {
+function addCustomProperties(path) {
     path.value.attributes = path.value.attributes || [];
 
-    (customProperties || []).forEach(function (propertyName) {
-        path.value.attributes.push(builders.jsxAttribute(builders.jsxIdentifier(propertyName), builders.jsxExpressionContainer(builders.memberExpression(builders.identifier('props'), builders.literal(propertyName), true))));
-    });
+    path.value.attributes.push(builders.jsxSpreadAttribute(builders.identifier('props')));
 }
 
 function stripSvgArguments(svgString) {
