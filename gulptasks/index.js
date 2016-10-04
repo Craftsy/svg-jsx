@@ -1,5 +1,5 @@
-import gulp from 'gulp';
-import babel from 'gulp-babel';
+const gulp = require('gulp');
+const babel = require('gulp-babel');
 
 gulp.task('build', () => {
     gulp.src('src/**/*.js')

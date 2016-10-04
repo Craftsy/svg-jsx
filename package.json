@@ -1,6 +1,6 @@
 {
   "name": "svg-jsx",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Utility to convert SVG files to React JSX components",
   "main": "dist/index.js",
   "repository": {
@@ -17,8 +17,8 @@
   "license": "MIT",
   "dependencies": {
     "esprima-fb": "^15001.1001.0-dev-harmony-fb",
-    "recursive-readdir": "^1.2.1",
     "recast": "^0.11.2",
+    "recursive-readdir": "^1.2.1",
     "svgo": "^0.5.1",
     "yargs": "^4.2.0"
   },
