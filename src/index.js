@@ -12,13 +12,17 @@ function fileExists(filepath) {
 }
 
 const argv = require('yargs')
-    .usage('Usage: $0 <input file> <ouput file>')
+    .usage('Usage: $0 <input file> <ouput file> [--prop className] [--prop otherAttribute]')
     .demand(2)
     .help('h')
     .alias('h', 'help')
     .argv;
 
 const [inputFilename, outputFilename] = argv._;
+let props = argv.prop;
+if (props != null && !Array.isArray(props)) {
+    props = [props];
+}
 
 // Ensure input file exists
 if (!fileExists(inputFilename)) {
@@ -34,5 +38,6 @@ svgToReact.convertFileSource(
     (err, output) => {
         const componentSource = '/*eslint-disable*/\n' + output;
         fs.writeFileSync(outputFilename, componentSource);
-    }
+    },
+    {customProperties: props}
 );

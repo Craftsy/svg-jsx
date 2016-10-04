@@ -2,7 +2,7 @@ var esprima = require('esprima-fb');
 var recast = require('recast');
 var builders = recast.types.builders;
 
-module.exports = function(svgString) {
+module.exports = function(svgString, {customProperties}) {
     var ast = recast.parse(svgString, {parser: esprima}).program;
 
     recast.types.visit(
@@ -29,8 +29,7 @@ module.exports = function(svgString) {
                 var jsxNodeName = path.value.name.name;
 
                 if (jsxNodeName === 'svg') {
-                    addClassNameProp(path);
-                    addOnClickProp(path);
+                    addCustomProperties(path, customProperties);
                 }
 
                 this.traverse(path);
@@ -50,38 +49,23 @@ module.exports = function(svgString) {
     return recast.print(ast, {parser: esprima}).code;
 };
 
-function addClassNameProp(path) {
+function addCustomProperties(path, customProperties) {
     path.value.attributes = path.value.attributes || [];
 
-    path.value.attributes.push(
-        builders.jsxAttribute(
-            builders.jsxIdentifier('className'),
-            builders.jsxExpressionContainer(
-                builders.memberExpression(
-                    builders.identifier('props'),
-                    builders.identifier('className'),
-                    false
+    (customProperties || []).forEach(propertyName => {
+        path.value.attributes.push(
+            builders.jsxAttribute(
+                builders.jsxIdentifier(propertyName),
+                builders.jsxExpressionContainer(
+                    builders.memberExpression(
+                        builders.identifier('props'),
+                        builders.literal(propertyName),
+                        true
+                    )
                 )
             )
-        )
-    );
-}
-
-function addOnClickProp(path) {
-    path.value.attributes = path.value.attributes || [];
-
-    path.value.attributes.push(
-        builders.jsxAttribute(
-            builders.jsxIdentifier('onClick'),
-            builders.jsxExpressionContainer(
-                builders.memberExpression(
-                    builders.identifier('props'),
-                    builders.identifier('onClick'),
-                    false
-                )
-            )
-        )
-    );
+        );
+    });
 }
 
 function stripSvgArguments(svgString) {

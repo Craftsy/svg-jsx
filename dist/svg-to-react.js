@@ -11,9 +11,9 @@ exports.convert = function (svgstring) {
     return toReact(svgstring);
 };
 
-exports.convertFileSource = function (content, callback) {
+exports.convertFileSource = function (content, callback, options) {
     svg.optimize(content.toString(), function (res) {
-        callback(null, toReact(res.data));
+        callback(null, toReact(res.data, options));
     });
 };
 
