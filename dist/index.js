@@ -24,12 +24,12 @@ function fileExists(filepath) {
 
 var argv = require('yargs').usage('Usage: $0 <input file> <ouput file>').demand(2).help('h').alias('h', 'help').argv;
 
-var _argv$_ = _slicedToArray(argv._, 2);
-
-var inputFilename = _argv$_[0];
-var outputFilename = _argv$_[1];
+var _argv$_ = _slicedToArray(argv._, 2),
+    inputFilename = _argv$_[0],
+    outputFilename = _argv$_[1];
 
 // Ensure input file exists
+
 
 if (!fileExists(inputFilename)) {
     process.exit(9);
